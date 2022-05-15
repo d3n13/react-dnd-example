@@ -32,41 +32,35 @@ export function processSortableHoverAndMutateItem<T extends HTMLElement>({
   }
   const dragIndex = item.index;
 
-  // Don't replace items with themselves
-  if (dragIndex === hoverIndex) {
+  const isInSamePlace = dragIndex === hoverIndex;
+  if (isInSamePlace) {
     return;
   }
 
-  // Determine rectangle on screen
-  const hoverBoundingRect = ref.current?.getBoundingClientRect();
-  if (!hoverBoundingRect) {
-    return;
-  }
+  const hoverBoundingRect = ref.current.getBoundingClientRect();
 
-  // Get vertical middle
   const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
 
-  // Determine mouse position
-  const clientOffset = monitor.getClientOffset();
+  const mousePosition = monitor.getClientOffset();
 
-  // Get pixels to the top
-  const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
-
-  // Only perform the move when the mouse has crossed half of the items height
-  // When dragging downwards, only move when the cursor is below 50%
-  // When dragging upwards, only move when the cursor is above 50%
-
-  // Dragging downwards
-  if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+  if (!mousePosition) {
     return;
   }
 
-  // Dragging upwards
-  if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+  const pixelsToTop = mousePosition.y - hoverBoundingRect.top;
+
+  const isDraggingDown = dragIndex < hoverIndex;
+  const isNotBelowHalf = pixelsToTop < hoverMiddleY;
+  if (isDraggingDown && isNotBelowHalf) {
     return;
   }
 
-  // Time to actually perform the action
+  const isDraggingUp = dragIndex > hoverIndex;
+  const isNotAboveHalf = pixelsToTop > hoverMiddleY;
+  if (isDraggingUp && isNotAboveHalf) {
+    return;
+  }
+
   moveItem(dragIndex, hoverIndex);
 
   // Note: we're mutating the monitor item here!
