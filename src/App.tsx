@@ -37,6 +37,17 @@ const initialGroups: IGroup[] = [
       },
     ],
   },
+  {
+    name: "Group 3",
+    items: [
+      {
+        name: "Group 3: Item 1",
+      },
+      {
+        name: "Group 3: Item 2",
+      },
+    ],
+  },
 ];
 
 export default function App() {
