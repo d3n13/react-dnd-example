@@ -1,7 +1,10 @@
-import { ComponentProps, useCallback } from "react";
+import { ComponentProps, useCallback, useRef } from "react";
 import { GroupControls } from "./GroupControls";
 import { Group as IGroup } from "./App.types";
 import { Items } from "./Items";
+import { DNDType } from "./dnd/dnd.constants";
+
+import { useSotable } from "./dnd/dnd.hooks";
 
 type Props = {
   group: IGroup;
@@ -20,6 +23,15 @@ export const Group = ({
   moveItem: _moveItem,
   ...groupProps
 }: Props) => {
+  const ref = useRef<HTMLParagraphElement>(null);
+
+  const sortableProps = useSotable({
+    hoverIndex: index,
+    moveItem: moveGroup,
+    ref,
+    type: DNDType.Group,
+  });
+
   const moveUp = useCallback(
     () => moveGroup(index, index - 1),
     [index, moveGroup]
@@ -36,12 +48,12 @@ export const Group = ({
   );
 
   return (
-    <>
+    <div {...sortableProps}>
       <h2>
         <GroupControls moveUp={moveUp} moveDown={moveDown} {...groupProps} />
         {group.name}
       </h2>
       <Items items={group.items} groupIndex={index} moveItem={moveItem} />
-    </>
+    </div>
   );
 };
