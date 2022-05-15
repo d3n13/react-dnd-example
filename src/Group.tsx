@@ -1,8 +1,7 @@
+import { ComponentProps, useCallback } from "react";
 import { Item } from "./Item";
-import { Group as IGroup, Item as IItem } from "./App.types";
 import { GroupControls } from "./GroupControls";
-import { ComponentProps } from "react";
-import { useCallback } from "react";
+import { Group as IGroup, Item as IItem } from "./App.types";
 
 type Props = {
   group: IGroup;
