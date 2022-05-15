@@ -3,6 +3,8 @@ import { Group } from "./Group";
 import { moveArrayItemImmutable } from "./utils/moveArrayItem";
 import { isMoveDownImpossible, isMoveUpImpossible } from "./App.utils";
 import { Group as IGroup } from "./App.types";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const initialGroups: IGroup[] = [
   {
@@ -84,5 +86,7 @@ export function Groups() {
     />
   );
 
-  return <>{groups.map(renderGroup)}</>;
+  return (
+    <DndProvider backend={HTML5Backend}>{groups.map(renderGroup)}</DndProvider>
+  );
 }

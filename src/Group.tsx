@@ -1,7 +1,7 @@
 import { ComponentProps, useCallback } from "react";
-import { Item } from "./Item";
 import { GroupControls } from "./GroupControls";
-import { Group as IGroup, Item as IItem } from "./App.types";
+import { Group as IGroup } from "./App.types";
+import { Items } from "./Items";
 
 type Props = {
   group: IGroup;
@@ -17,11 +17,9 @@ export const Group = ({
   group,
   index,
   moveGroup,
-  moveItem,
+  moveItem: _moveItem,
   ...groupProps
 }: Props) => {
-  const renderItem = (item: IItem) => <Item key={item.name} item={item} />;
-
   const moveUp = useCallback(
     () => moveGroup(index, index - 1),
     [index, moveGroup]
@@ -32,13 +30,18 @@ export const Group = ({
     [index, moveGroup]
   );
 
+  const moveItem: ComponentProps<typeof Items>["moveItem"] = useCallback(
+    (fromIndex, toIndex) => _moveItem(index, fromIndex, toIndex),
+    [_moveItem, index]
+  );
+
   return (
     <>
       <h2>
         <GroupControls moveUp={moveUp} moveDown={moveDown} {...groupProps} />
         {group.name}
       </h2>
-      {group.items.map(renderItem)}
+      <Items items={group.items} groupIndex={index} moveItem={moveItem} />
     </>
   );
 };
